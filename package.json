@@ -1,0 +1,14 @@
+{
+  "name": "fashion-ecommerce-monorepo",
+  "private": true,
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "dev": "echo 'Run app-specific dev scripts: pnpm --filter api dev, pnpm --filter web dev, pnpm --filter admin dev'",
+    "lint": "echo 'Configure ESLint per app and run pnpm -r lint'",
+    "test": "echo 'Configure tests per app and run pnpm -r test'",
+    "compose:config": "./scripts/compose-config.sh /tmp/compose.out",
+    "preflight": "./scripts/preflight.sh",
+    "launch:status": "./scripts/launch-status.sh",
+    "validate:prod": "./scripts/validate-ci-local.sh && ./scripts/validate-secrets-manager.sh && ./scripts/validate-monitoring.sh"
+  }
+}
