@@ -1,0 +1,15 @@
+{
+  "name": "web",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "test:e2e": "playwright test",
+    "screenshot:home": "node ./scripts/capture-home-screenshot.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "playwright": "^1.53.0"
+  }
+}
