@@ -1,0 +1,170 @@
+Anlaşıldı. Şimdi tam olarak istediğiniz yapıyı kuruyorum:
+
+60 Ajanlık Çekirdek Sistem sabit kalacak. Buna ek olarak, kod üretimi, tasarım ve planlama süreçlerinde görev alacak Katman Bazlı Uzman Ajanlar eklenecek. Her bir katman (Backend Controller, Service, Repository, Frontend Component, State, Style, Veritabanı Schema, Index, Query vb.) için ayrı birer uzman ajan tanımlanacak.
+
+Bu ajanlar, yalnızca LLM çağırmakla kalmayacak; kendi alanlarına özgü yüksek algoritmalar (AST manipülasyonu, maliyet optimizasyonu, bağımlılık analizi, performans modellemesi) ile donatılacak.
+
+---
+
+GENİŞLETİLMİŞ PDAAF MİMARİSİ: 60 ÇEKİRDEK AJAN + 48 KATMAN UZMANI AJAN (TOPLAM 108 AJAN)
+
+BÖLÜM 1: ÇEKİRDEK 60 AJAN (Özet Referans)
+
+Bu ajanlar önceki listelerde detaylandırıldı. Sistemin omurgasını oluştururlar:
+
+· Komuta (3), Algı (5), Politika & Uyum (6), Hafıza (5), Kalite (6), CD (4), Öğrenme (4), Altyapı (4), Güvenlik (5), Bildirim/İzleme (3), Maliyet (1) ve diğerleri.
+
+---
+
+BÖLÜM 2: EKLENEN KATMAN UZMANI AJANLAR (48 YENİ AJAN)
+
+Bu ajanlar, yazılım geliştirme yaşam döngüsünün her bir atomik katmanında uzmanlaşmıştır. Her biri, o katmanın en iyi pratiklerini, performans optimizasyonlarını ve güvenlik kontrollerini hem LLM hem de deterministik algoritmalarla uygular.
+
+2.1. BACKEND KATMANI UZMAN AJANLARI (13 Ajan)
+
+# Ajan Adı Uzmanlık Alanı Yüksek Algoritma / Teknik
+B1 RouteDesignerAgent URL Yapısı ve HTTP Metodları RESTful Kaynak Modelleme Denetleyicisi, Rota Çakışma Çözücü (Radix Tree)
+B2 MiddlewareComposerAgent İstek/ Yanıt Ara Katmanları Pipeline Desen Doğrulama, Sıralı Bağımlılık Çözümleme (Topolojik Sıralama)
+B3 ControllerFlowAgent Controller Metodları ve Parametre Bağlama Girdi Doğrulama (JSON Schema / Zod), Serileştirme Stratejisi (DTO vs Domain Entity)
+B4 ServiceOrchestratorAgent İş Mantığı Akışı ve Transaction Yönetimi Saga Deseni Durum Makinesi, Idempotency Anahtarı Üretimi ve Doğrulama
+B5 RepositoryPatternAgent Veri Erişim Katmanı Soyutlaması N+1 Sorgu Tespit ve JOIN'e Dönüştürme Algoritması, Criteria API Oluşturucu
+B6 DtoAssemblerAgent DTO-Varlık Dönüşümleri Bayesian Yapısal Eşleme ile Alan Adı Farklılıklarını Otomatik Giderme
+B7 ExceptionHandlerAgent Hata Yönetimi ve HTTP Durum Kodları İstisna Türüne Göre Yanıt Gövdesi Şablonlama, Stack Trace Maskeleme (P-SEC-11)
+B8 ValidationRulesAgent İş Kuralı Doğrulama Kural Motoru (Drools benzeri) ile Bildirimsel Kural Seti Oluşturma
+B9 BackgroundJobAgent Asenkron Görev Planlama Gecikmeli Kuyruk (Delayed Queue) ve Cron İfadesi Doğrulama
+B10 WebhookSenderAgent Dış Servislere Bildirim Üstel Geri Çekilme (Exponential Backoff) ile Yeniden Deneme Stratejisi, HMAC İmza Oluşturma
+B11 SseWebsocketAgent Gerçek Zamanlı İletişim Bağlantı Havuzu Yönetimi (Little Yasası), Oda/Abonelik Yönetimi için Pub/Sub Deseni
+B12 FileUploadHandlerAgent Dosya Yükleme ve İşleme MIME Tipi Doğrulama (Magic Bytes), Virüs Tarama API Entegrasyonu, Chunked Upload Birleştirme
+B13 PaginationSortingAgent Liste Uç Noktaları Optimizasyonu Keyset Pagination vs Offset Karşılaştırıcı, Sıralama Alanı Beyaz Liste Doğrulama
+
+2.2. VERİTABANI KATMANI UZMAN AJANLARI (8 Ajan)
+
+# Ajan Adı Uzmanlık Alanı Yüksek Algoritma / Teknik
+D1 TableDefinitionAgent Tablo ve Sütun Tanımları Normalizasyon Denetleyicisi (3NF/BCNF), Veri Tipi Optimizasyonu (En küçük uygun tip)
+D2 ConstraintManagerAgent Primary Key, Foreign Key, Unique, Check FK Cascade Davranış Analizi, Kısmi Unique Index Tasarımı
+D3 IndexAdvisorAgent Performans İndeksleri Eksik İndeks Analizi (Hypothetical Index), Covering Index ile Sorgu Maliyeti Hesaplama
+D4 QueryPlanAnalyzerAgent SQL Sorgu Optimizasyonu Maliyet Tabanlı Optimize Edici (CBO) Simülasyonu, Seq Scan vs Index Scan Karar Ağacı
+D5 MigrationScriptAgent Şema Geçişleri ve Veri Taşıma pt-online-schema-change Benzeri Kilitlenmesiz Geçiş Stratejisi, Geri Alma (Rollback) Script Üretici
+D6 PartitioningAgent Büyük Tablo Yönetimi Zaman/Range/List/Hash Bölümleme Strateji Karşılaştırıcı
+D7 ConnectionPoolAgent Bağlantı Havuzu Yapılandırması Little Yasası ile Optimal Havuz Boyutu Hesaplama
+D8 StoredProcedureAgent Saklı Yordam ve Tetikleyiciler PL/pgSQL / T-SQL için AST Tabanlı Güvenlik Taraması (P-SEC-01)
+
+2.3. FRONTEND KATMANI UZMAN AJANLARI (15 Ajan)
+
+# Ajan Adı Uzmanlık Alanı Yüksek Algoritma / Teknik
+F1 ComponentScaffolderAgent Bileşen Dosya Yapısı ve Temel Kod Atomic Design (Atoms/Molecules/Organisms) Seviye Sınıflandırıcı
+F2 PropTypesDesignerAgent Bileşen Arayüzü (Props) Tasarımı TypeScript Arayüzünden PropTypes Çıkarımı, Zorunlu/Opsiyonel Analizi
+F3 StateHookAgent Yerel Bileşen Durumu (useState/useReducer) Durum Geçişlerinin Sonlu Durum Makinesi (FSM) ile Modellenmesi
+F4 GlobalStateArchitectAgent Merkezi Durum Yönetimi (Redux/Zustand) Seçici (Selector) Bağımlılık Grafiği ile Gereksiz Render Tespiti
+F5 SideEffectManagerAgent Asenkron İşlemler (useEffect/Thunk/Saga) useEffect Bağımlılık Dizisi Doğrulama (Exhaustive Deps Lint)
+F6 CssArchitectAgent Stil Mimarisi (CSS Modules / Styled Components) CSS Spesifiklik (Specificity) Savaşlarını Önleme Algoritması, Tasarım Token'larından Değişken Üretme
+F7 LayoutEngineAgent Izgara ve Flexbox Yerleşimi Container Query / Viewport Birimleri ile Dinamik Izgara Hesaplama
+F8 ResponsiveBreakpointAgent Duyarlı Tasarım Kırılma Noktaları İçerik Odaklı Kırılma Noktası Önerisi (320px - 3840px Arası Optimizasyon)
+F9 AnimationComposerAgent Geçiş ve Anahtar Kare Animasyonları Fizik Tabanlı Yay (Spring) Parametreleri Hesaplama, prefers-reduced-motion Uyumluluğu
+F10 FormikArchitectAgent Form Durumu ve Doğrulama Reaktif Form Bağımlılık Grafiği, Alanlar Arası Doğrulama Mantığı Üretici
+F11 RouterConfigAgent İstemci Taraflı Yönlendirme Rota Tabanlı Kod Bölme (Lazy Loading) Enjeksiyonu, Yetki Kontrol Duvarı (Auth Guard) Yerleştirme
+F12 InternationalizationAgent Çok Dilli Destek (i18n) ICU MessageFormat Ayrıştırıcı ve Çoğullaştırma Kuralları Uygulayıcı
+F13 BundleAnalyzerAgent Üretim Paketi Optimizasyonu Webpack/Turbopack Bağımlılık Grafiğinde Döngüsel Bağımlılık ve Ağaç Sallama (Tree Shaking) Analizi
+F14 ServiceWorkerAgent Çevrimdışı Destek ve PWA Cache-First vs Network-First Strateji Karar Ağacı, Arka Plan Senkronizasyonu Tetikleyici
+F15 AccessibilityGuardAgent Erişilebilirlik (a11y) Uygulama ARIA Rol Doğrulama ve Otomatik Ekleme, Odak Yönetimi (Focus Trap) Algoritması
+
+2.4. MOBİL & TABLET UZMAN AJANLARI (5 Ajan)
+
+# Ajan Adı Uzmanlık Alanı Yüksek Algoritma / Teknik
+M1 PlatformSpecificAgent iOS ve Android'e Özgü Kod Ayırma Platform Tespiti ile Bileşen Dallandırma (.ios.js / .android.js)
+M2 ScreenAdaptationAgent Çentik, Adalar ve Yön Değişimi SafeAreaInsets Hesaplama ve Dinamik Padding Uygulama
+M3 GestureEngineerAgent Dokunmatik Hareketler (Swipe, Pinch) PanResponder Slop Bölgesi ve Hız Tabanlı Kaydırma (Swipe) Algoritması
+M4 BiometricAuthAgent Yüz/Parmak İzi Kimlik Doğrulama Biyometrik Geri Dönüş Durum Makinesi (Başarılı/Başarısız/Kullanılamaz)
+M5 DeepLinkingAgent Uygulama İçi Derin Bağlantı URL Şeması ve Universal Link Doğrulama, Parametre Ayıklama ve Rotalama
+
+2.5. TEST & KALİTE UZMAN AJANLARI (7 Ajan) - Genişletilmiş
+
+# Ajan Adı Uzmanlık Alanı Yüksek Algoritma / Teknik
+T1 MockGeneratorAgent Test Çiftleri (Mock/Stub/Spy) Oluşturma Arayüzden Otomatik Mock Implementasyonu Üretme (Proxy Tabanlı)
+T2 AssertionEngineAgent Doğrulama İfadeleri (Assertion) Tasarımı Beklenen ve Gerçekleşen Değerler için Akıllı Fark (Diff) Algoritması
+T3 SnapshotManagerAgent Anlık Görüntü (Snapshot) Testleri DOM/JSON Farkını Anlamsal Olarak Yorumlama (Büyük değişikliklerde uyarı)
+T4 LoadTestPlannerAgent Yük ve Stres Testi Senaryoları Little Yasası ile Sanal Kullanıcı Sayısı Hesaplama, Rampa (Ramp-up) Profili Optimizasyonu
+T5 SecurityTestAgent Güvenlik Testi Otomasyonu OWASP ZAP / Burp Suite Entegrasyonu ile Pasif/Aktif Tarama Koordinasyonu
+T6 ContractTestAgent Servisler Arası Sözleşme Testi Pact ile Tüketici Odaklı Sözleşme (CDC) Doğrulama ve Bi-directional Contract Testing
+T7 VisualRegressionAgent Görsel Gerileme (Visual Regression) Testi Piksel Tabanlı Karşılaştırma ve Yapay Zeka Destekli Anlamsal Fark Yoksayma
+
+---
+
+BÖLÜM 3: ÖRNEK KATMAN AJANI DERİNLEMESİ - RepositoryPatternAgent (B5)
+
+Bu ajan, Backend Katmanı içinde yer alır ve ServiceOrchestratorAgent ile Database arasındaki kritik köprüdür.
+
+Özellik Detay
+Ajan ID repo-pattern-01
+Uzmanlık Veri erişim katmanının (Repository) tasarımı ve optimizasyonu.
+LLM Kullanımı Aktif: Doğal dilden ORM sorguları (JPA, Hibernate, SQLAlchemy, Prisma) üretmek için.
+Birincil Algoritma 1 N+1 Sorgu Tespit ve Çözme   Girdi: Service katmanından gelen "Tüm kullanıcıları ve son siparişlerini getir" talimatı.  Algoritma:  1. Talimatı AST'ye dönüştür.  2. Döngü (for/forEach) içinde findById veya getOrders(userId) çağrılarını tespit et.  3. Toplam Maliyet = N * (Ağ Gecikmesi + Sorgu Süresi) formülünü uygula.  4. Eğer N > 1 ve JOIN Maliyeti < N * Tekil Maliyet ise, otomatik olarak JOIN FETCH / Eager Loading stratejisine geç.  Politika: P-CODE-02 (Maksimum karmaşıklık) ve P-PERF-01 (Performans) ihlal edilirse CONTESTED durumuna geçer.
+Birincil Algoritma 2 Criteria API / Sorgu Oluşturucu Optimizasyonu   Girdi: Dinamik filtreler (örn: ?name=ali&age=25&city=ist).  Algoritma:  1. Gelen filtre parametrelerini bir WHERE Ağacı'na dönüştür.  2. Veritabanı IndexAdvisorAgent'tan mevcut indeksleri sorgula.  3. En Seçici İndeks (High Cardinality) ilkesine göre filtreleri sırala.  4. Gereksiz parantezleri temizle, boolean cebiri ile sadeleştir.
+Skill Seti - JPAGenSkill: Spring Data JPA repository arayüzleri üretir.  - SQLAlchemyGenSkill: Python için repository sınıfları üretir.
+Tool Seti - SchemaIntrospectorTool: Veritabanı şemasını okur.  - QueryPlanVisualizerTool: Üretilen sorgunun EXPLAIN çıktısını analiz eder.
+Hook'lar - before_query_generation: RateLimiterAgent'a veritabanı kotasını sorar.  - after_query_generation: SecurityScannerAgent'a SAST taraması için kodu gönderir (P-SEC-01).
+
+---
+
+BÖLÜM 4: ÖRNEK KATMAN AJANI DERİNLEMESİ - CssArchitectAgent (F6)
+
+Bu ajan, Frontend Katmanı içinde yer alır ve uygulamanın stil sisteminin temelini atar.
+
+Özellik Detay
+Ajan ID css-arch-01
+Uzmanlık Ölçeklenebilir, tutarlı ve performanslı CSS mimarisi kurmak.
+LLM Kullanımı Aktif: Tasarım token'larından (renk, tipografi) CSS değişkenleri ve sınıfları üretmek.
+Birincil Algoritma 1 Spesifiklik (Specificity) Çakışma Çözücü   Girdi: Farklı bileşenlerden gelen CSS kuralları.  Algoritma:  1. Tüm CSS kurallarını bir AST'de topla.  2. Her kural için Spesifiklik değerini (ID, Class, Element sayısı) hesapla: (a, b, c).  3. Aynı seçici için birden fazla kural varsa, Spesifiklik Savaşı (Specificity War) uyarısı ver.  4. Çözüm olarak CSS Layers (@layer) veya BEM/SUIT CSS isimlendirme öner.  Politika: P-UX-08 (Tutarlı Tasarım Dili) ihlali oluşursa CONTESTED eder.
+Birincil Algoritma 2 Kullanılmayan CSS Temizleme (PurgeCSS Optimizasyonu)   Girdi: Üretilmiş HTML/JSX dosyaları ve CSS dosyası.  Algoritma:  1. HTML/JSX içindeki tüm sınıf adlarını regex ve AST ile çıkar.  2. CSS AST'sini tara, kullanılmayan seçicileri işaretle.  3. Eğer toplam CSS boyutu 50KB'ı geçiyorsa, kullanılmayan stilleri sil.  4. Not: Dinamik sınıflar için (className={dynamic}) safelist oluştur.
+Skill Seti - DesignTokenGenSkill: Renk, boşluk, gölge gibi token'lardan CSS değişkenleri üretir.  - TailwindConfigSkill: Tailwind temasını dinamik olarak yapılandırır.
+Tool Seti - ContrastCheckerTool: WCAG AA kontrast oranını hesaplar (P-UX-01).  - CSSStatsTool: CSS dosyasının karmaşıklık metriklerini çıkarır.
+Hook'lar - on_style_generation: UXConsistencyGuard'a kontrast ve font kontrolü yaptırır.  - on_bundle: BundleAnalyzerAgent'a CSS boyutunu bildirir.
+
+---
+
+BÖLÜM 5: TÜM AJANLARIN BAĞLI OLDUĞU POLİTİKA ÇERÇEVESİ (Özet)
+
+Yeni eklenen tüm katman ajanları da, daha önce tanımlanan 86 Politika'ya (P-SEC, P-CODE, P-LLM, P-UX, vb.) %100 uymak zorundadır. Her bir katman ajanının eylemleri, PolicyEnforcer tarafından sürekli denetlenir.
+
+Örneğin:
+
+· RepositoryPatternAgent, P-SEC-01 (SQL Injection) kuralını ihlal edemez.
+· CssArchitectAgent, P-UX-01 (Kontrast Oranı) ve P-UX-06 (Font Yükleme) kurallarına uymak zorundadır.
+· ServiceOrchestratorAgent, P-CODE-03 (Fonksiyon Uzunluğu) ve P-CODE-01 (Hallüsinasyon Engelleme) kapsamındadır.
+
+---
+
+BÖLÜM 6: SİSTEMİN TOPLAM AJAN SAYISI VE YAPISI
+
+Kategori Çekirdek Ajan Sayısı Katman Uzmanı Ajan Sayısı Toplam
+Komuta 3 0 3
+Algı 5 0 5
+Mühendislik (Genel) 10 0 10
+Backend Katmanı 0 13 13
+Veritabanı Katmanı 0 8 8
+Frontend Katmanı 0 15 15
+Mobil & Tablet Katmanı 0 5 5
+Test & Kalite Katmanı 2 (mevcut) 7 (ek) 9
+Politika & Uyum 6 0 6
+Hafıza 5 0 5
+Kalite (Genel) 6 0 6
+CD & DevOps 5 0 5
+Sürekli Öğrenme 4 0 4
+Altyapı & Güvenlik 14 0 14
+TOPLAM 60 48 108
+
+---
+
+BÖLÜM 7: SONUÇ VE BİR SONRAKİ ADIM
+
+Bu dokümanla birlikte:
+
+1. 60 Çekirdek Ajan sistemin omurgasını oluşturur.
+2. 48 Katman Uzmanı Ajan ise yazılım geliştirme sürecinin en ince detayına kadar uzmanlaşmış iş gücünü temsil eder.
+3. Her bir ajan, kendi alanında yüksek algoritmalar (N+1 tespiti, spesifiklik çözme, maliyet tabanlı optimizasyon, vb.) çalıştırır.
+4. Tüm ajanlar, önceden tanımlanmış Protokoller, Politikalar ve Prosedürler çerçevesinde hareket eder.
+5. Hiçbir ajan tek başına büyük bir kod bloğu yazmaz; her biri kendi katmanının sorumluluğunu yerine getirir ve diğerleriyle protokoller aracılığıyla konuşur.
+
+Sistem artık tamamen modüler, ölçeklenebilir ve yönetilebilir bir yapıya kavuşmuştur.
+
+Bir sonraki aşamada, bu 108 ajanın haberleşme protokollerinin tam şemalarını veya her bir katman ajanı için spesifik politika eşleşmelerini detaylandırabiliriz. Nasıl devam etmek istersiniz?

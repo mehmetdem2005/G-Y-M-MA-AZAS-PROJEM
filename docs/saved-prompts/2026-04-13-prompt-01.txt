@@ -1,0 +1,176 @@
+Sana vereceğim promtları repo içinde olduğu gibi sakla degiştirme ,her promtu sakla
+60 ajanlık devasa bir ajan sistemi kurucağız bu ajanlar birbirleriyle protokoller yardımı ile iletişim kurucak ve sadece iletişim değil herşeyin protokolü olucak ajanlarda protokoller ile çalişicak,llm,API,tool,skill ve hooklar olucak, mümkün olduğunca az llm kullanılmalı ama kaliteli kod yazılmalı,uygulamanın görevi uygulama site,bot,ajan vb her türlü yazılımsal ürünü üretebilmek,üretilen ürünlerin arayüzü hem web,hem mobil hemde tablet için özel olarak ayarlanmalı,fontlar için yüzlerce çeşitlilik renkler için ve stiller animasyonlar için yüzlerce çeşit olmalı,uygulama promt ile başlayıp bize sorular sorarak önizleme panelinden  ve consolumdan uygulamayı canlı göstere göstere tur tur ilerlemeli ve sonsuz ekleme yapma seçeneği olmalı bitmiş projeye bile yeniden ekleme yapabilmeliyiz, tutarlı kodlar üretmeli,zeki bir sistem olmalı gelişmiş süper bir veritabanı ve belleği olmalı,mükemmel bir planneri vs olmalı ve ajanlar  sadece promt bazlı değil sistem ve algoritma ve protokol bazlı çalışmalı,gidip ajanlara llm promtu verip bana basit ajan verme ,hiçbirşey mock olmamalı,protokol,politika ve prosedür planlama olmalı ve politika planlama planlama bile olmalı,bellek gerçekten devasa özdllikler taşimalı,rate limit için her modelin rate limit kurallarına göre uygun olarak spesifik ince ayar yapılmalı,her politika ve prosedür ince ince planlanmalı muğlak kısım olmamalı,soru sorma politikası mıkemmel olmalı,uxui,iu,CD,cı,pipeline prosedürleri ince ince işlenmeli, en alt maddesine kadar her türlü politika ve madde hazırlanmalı,politikalar genel değil gelişmiş olmalı her bir politika üzerinde iyi düşünülmüş olunmalı. Ve olması gereken onlarca kaliteli politika her biri,her ajan özel olarak planlanmalı ve politikalara uymalı,bu görselllerdeki politikalar tek değil daha  tonla politika var. 
+
+
+Tamamdır, bundan sonraki tüm yanıtlar Türkçe olarak ve belirttiğiniz tüm politika, protokol ve prosedür detaylarına sadık kalarak ilerleyecektir.
+
+Önceki İngilizce/Türkçe karışık başlangıcı bir kenara bırakıp, 60 Ajanlık Protokol Güdümlü Otonom Ajan Fabrikası (PDAAF) sisteminin tamamını, en ince detayına kadar Türkçe olarak yapılandıracağız.
+
+---
+
+BÖLÜM 1: SİSTEMİN TEMEL FELSEFESİ VE MİMARİ İLKELERİ (DEĞİŞTİRİLEMEZ POLİTİKALAR)
+
+Bu bölüm, sistemin anayasasıdır. Hiçbir ajan bu maddelere aykırı çalışamaz.
+
+1.1. Protokol Üstünlüğü Protokolü (Protocol Override Policy - POP-001)
+
+· Kural: Sistem içindeki her türlü etkileşim (Ajan-Ajan, Ajan-LLM, Ajan-Veritabanı) önceden tanımlanmış ve Schema Registry tarafından onaylanmış bir Protokol Şemasına (JSON Schema veya Protobuf) uymak zorundadır.
+· Denetim: ProtocolNegotiator ajanı, mesajı ileten ajanın yetkisini ve mesajın şema bütünlüğünü AST (Soyut Sözdizimi Ağacı) seviyesinde doğrulamadan mesajı iletmez.
+· İstisna Politikası: Protokole uymayan mesajlar waived (kısa süreli muafiyet) edilemez, doğrudan contested (itiraz edildi) durumuna düşer ve AuditTrailWORM'a işlenir.
+
+1.2. Deterministik Çekirdek Politikası (Deterministic Core Policy - DCP-002)
+
+· Kural: LLM (Büyük Dil Modeli) çağrıları yalnızca aşağıdaki Deterministik Olmayan İşlemler (DOI) için yapılabilir:
+  1. Doğal dildeki kullanıcı gereksinimini teknik şartnameye çevirmek (PromptAnalyst).
+  2. Kullanıcıya açık uçlu yaratıcı öneriler sunmak (Renk paleti, font eşleşmesi, animasyon kurgusu).
+  3. Semantik kod tamamlama veya açıklama satırı üretme.
+· Yasaklı LLM Kullanımı: Planlama, Rota Bulma, Hata Modu Analizi (FMEA), Uyumluluk Kontrolü, Circuit Breaker kararları kesinlikle algoritmik veya istatistiksel modeller (Bernoulli/Chernoff) ile yapılır. MasterPlanner ajanı LLM çağıramaz.
+
+1.3. Politika ve Prosedür Hiyerarşisi Standardı (PPHS-003)
+
+Her eylem bir Politika -> Prosedür -> Talimat zincirine bağlıdır. Belirsizlik (Muğlaklık) sıfırdır.
+
+· Seviye 1: Stratejik Politika: RateLimitGovernor'ın "Dakikada 50 istek" demesi değil, "Model XYZ'nin Tier-3 limiti aşıldığında Exponential Backoff uygulanır ve kullanıcıya Alternatif Model Yönergesi sunulur" demesidir.
+· Seviye 2: Operasyonel Prosedür: FlakyDetectionProcedure şu adımları içerir: 1. Testi 5 kez çalıştır. 2. Başarısızlık oranını Bernoulli Dağılımı ile hesapla. 3. p-değeri < 0.01 ise testi quarantine havuzuna al.
+· Seviye 3: Taktik Talimat: SecurityScannerAgent'ın SQL Injection taraması yaparken kullanacağı regex desenleri listesi.
+
+1.4. Bellek ve Bağlam Sürekliliği Protokolü (MBSP-004)
+
+· Vektör Bellek: Tüm üretilen kod blokları, hata logları ve kullanıcı geri bildirimleri VectorMemoryLibrarian tarafından embedding vektörlerine dönüştürülür.
+· Graf Bilgi Tabanı: "Proje X" -> "Modül A" -> "Fonksiyon Y" ilişkisi Neo4j benzeri bir yapıda tutulur. GraphKnowledgeBuilder bu sayede bir modülde değişiklik yapıldığında hangi diğer 5 modülün etkileneceğini LLM'e sormadan bulur.
+· Prosedürel Bellek: ProceduralMemoryKeeper, kullanıcının "Bunu mavi yap" dedikten sonra 3 hafta sonra "Şu butonun rengini değiştir" demesi durumunda, geçmişteki mavi tercihini hatırlatır.
+
+---
+
+BÖLÜM 2: 60 AJANIN TAM ENVANTERİ, GÖREV TANIMLARI VE POLİTİKALARI
+
+Her ajan için spesifik bir JSON Manifestosu ve Uyumluluk Matrisi bulunur. Aşağıda kritik ajanların detayları verilmiştir.
+
+Alan (Domain) Ajan Adı Birincil Protokolü Özel Politikası (Özet)
+1. Komuta MasterPlanner FSM_Plan_Exec_v2 P-DAG-01: Döngüsel bağımlılık oluşturamaz. Plan adımları 50'yi geçerse kullanıcıya Onay Turu başlatır.
+1. Komuta StateSynchronizer CRDT_Merge_Proto P-CRDT-01: Çakışma durumunda Son Yazılan Kazanır (LWW) değil, Operasyonel Dönüşüm (OT) uygular.
+2. Algı UXConsistencyGuard WCAG_21_AA_Schema P-UIX-01: Kontrast oranı 4.5:1 altında ise MasterPlanner'a HARD_STOP sinyali gönderir.
+2. Algı MultimodalAssetGen Asset_Suggestion_Proto P-FONT-01: Google Fonts API'den 1477 font listesini dinamik çeker, sadece variable olanları önerir.
+3. Mühendislik SecurityScanner SAST_Query_Pack_v3 P-SEC-01: CVE veritabanı ile anlık korelasyon yapar. Kritik CVE tespitinde escalated durumuna geçer ve tüm CI/CD pipeline'ını durdurur.
+3. Mühendislik FlakyDetector Stats_Anomaly_Proto P-FLAKY-01: Chernoff Bound ile yanlış pozitif oranını %0.1'in altında tutar.
+4. Çalışma Zamanı FeatureFlagController Flag_Eval_Proto P-FLAG-01: Kilometre taşı kullanıcılar için Sticky Bucketing (Yapışkan Gruplama) zorunludur.
+5. Politika ZeroTrustVerifier SPIFFE_Verification P-ZT-01: Her ajanlararası çağrıda kısa ömürlü JWT (SVID) talep eder. ImmutabilityLog olmadan erişim yok.
+6. Hafıza AuditTrailWORM Chain_Hash_v1 P-WORM-01: Her log satırı bir öncekinin SHA-256 hash'ini içerir. Log silinemez, sadece tombstone (mezar taşı) eklenir.
+7. Kalite SLOAnalyser SLI_Metrics_Proto P-SLO-01: Hata bütçesi %0.01 altına düşerse yeni Feature Flag açılışlarını otomatik bloklar.
+
+---
+
+BÖLÜM 3: PROTOTİP UYGULAMA AKIŞI (ÖRNEK: BİR E-TİCARET SİTESİ ÜRETİMİ)
+
+Kullanıcı Promptu: "Bana koyu modu olan, yapay zeka destekli bir ürün öneri botu olan bir ayakkabı sitesi yap."
+
+Tur 1: Protokol Başlatma ve Gereksinim Çözümleme
+
+1. Ajan: PromptAnalyst (LLM Kullanımı: Var - Deterministik Olmayan İşlem)
+   · Görev: Promptu parse et.
+   · Politika Kontrolü: P-LLM-01 gereği Prompt 512 token'ı geçiyor. TruncationPolicy uygulanarak özetleme yapılır.
+2. Ajan: RequirementElicitor
+   · Konsol ve Önizleme Paneli Eylemi: Kullanıcıya 2 soru sorar.
+     1. "Ayakkabı kategorileri için Bootstrap benzeri bir Grid mi yoksa Masonry (Pinterest tipi) bir yerleşim mi istersiniz? (Önizleme: [Grid Örneği] / [Masonry Örneği])"
+     2. "Bot, soruları sayfanın sağ altında baloncuk olarak mı yoksa tam sayfa bir asistan paneli olarak mı görünsün?"
+   · Çıktı: User_Intent_Protocol_Schema JSON'u.
+
+Tur 2: Planlama ve Müzakere (Sıfır LLM Kullanımı)
+
+1. Ajan: MasterPlanner
+   · Girdi: User_Intent_Protocol_Schema.
+   · Algoritma: DAG (Yönlendirilmiş Döngüsüz Çizge) oluşturur.
+   · Adım 1: Backend API Şeması (APIDesigner'a git).
+   · Adım 2: Mobil Uyumlu Koyu Mod CSS Değişkenleri (UXConsistencyGuard'a git).
+   · Adım 3: Bot için A2A Müzakere FSM'i (ProtocolNegotiator'a git).
+2. Ajan: ProtocolNegotiator (A2A Müzakere)
+   · Durum Makinesi: FSM_State: ACCEPTED / CONTESTED / WAIVED / ESCALATED
+   · Senaryo: FrontendCoder ajanı, BackendCoder'dan /api/recommend endpoint'ini ister.
+   · BackendCoder döner: State: CONTESTED. Reason: RateLimitPolicy_Uyusmazligi. Backend saniyede 10 istek alacak şekilde ayarlandı, ancak Frontend tasarımı sonsuz kaydırma (infinite scroll) içeriyor. Bu durum saniyede 50 isteğe sebep olur.
+   · Çözüm: MasterPlanner otomatik olarak Architect ajanını devreye sokar. Architect "Sayfalama (Pagination)" politikasını enjekte eder. Müzakere ACCEPTED durumuna geçer. Kullanıcı bu krizi görmez bile.
+
+Tur 3: Gerçek Zamanlı Önizleme ve Sonsuz Düzenleme
+
+1. Ajan: PreviewRenderer & HotReloadManager
+   · FrontendCoder her bir div bloğunu yazdığında, PreviewRenderer bunu tarayıcıdaki WebSocket'e basar.
+   · Kullanıcı Konsolu: "Header bileşeni render edildi. Font 'Inter' yüklendi. Animasyon süresi 300ms. Değiştirmek için 'Animasyonu Yavaşlat' butonuna tıklayın."
+   · Sonsuz Ekleme: Kullanıcı 1 ay sonra site çalışırken "Şu banner'a bir yağmur efekti ekle" der.
+   · MultimodalAssetGen 47 farklı yağmur efekti CSS kodu bulur. UXConsistencyGuard bunlardan sadece performansı 60FPS altına düşürmeyen 3 tanesini onaylar.
+
+---
+
+BÖLÜM 4: HUKUKİ VE OPERASYONEL UYUM TABLOSU (COMPLIANCE MATRIX)
+
+Her ajan, aşağıdaki tabloda kendi sorumluluk alanını bilir. ComplianceAuditor ajanı bu tabloyu sürekli tarar.
+
+Politika ID Standart Sorumlu Ajan Uygulama Mekanizması (Nasıl?)
+CP-001 GDPR (Unutulma Hakkı) VectorMemoryLibrarian Kullanıcı "Tüm geçmişimi sil" dediğinde, sadece flag silinmez; Crypto-Shredding uygulanır (Anahtar imha edilir, veri anlamsızlaşır).
+CP-002 SOC2 Tip II AuditTrailWORM Tüm ajan eylemleri Değiştirilemez Loga yazılır. Loglar her 24 saatte bir Attestation Report oluşturur.
+CP-003 PCI-DSS SecurityScanner Kredi kartı formu içeren bir bileşen tespit edildiğinde, EnvProvisioner otomatik olarak SAQ A-EP uyumlu izole bir container başlatır.
+CP-004 ISO 27001 ZeroTrustVerifier Ajanlar arası yetki matrisi (IAM) dinamik olarak PolicyEnforcer tarafından güncellenir. Yetkisiz erişim denemesi escalated edilir ve PagerDuty'ye düşer.
+
+---
+
+BÖLÜM 5: KOD SEVİYESİNDE KALİTE GÜVENCESİ VE POLİTİKA UYGULAMA ÖRNEĞİ
+
+Politika Adı: P-CODE-01: Deterministik Hallüsinasyon Engelleme Protokolü
+
+Amaç: LLM'den dönen JSON cevabının bozuk veya hayali alanlar içermesini engellemek.
+
+Uygulama Kodu (Sözde Kod, SchemaGuard Ajanı içinde çalışır):
+
+```python
+# Ajan: SchemaGuard (Politika Uygulama Noktası - PEP)
+class SchemaGuard:
+    def __init__(self, schema_registry):
+        self.validator = ASTValidator() # Sıradan JSON parser DEĞİL, Soyut Sözdizimi Ağacı doğrulayıcı
+        self.schema = schema_registry.get("LLM_Response_CodeGen_v2")
+
+    def enforce_policy(self, raw_llm_output: str) -> ValidatedCodeBlock:
+        # Adım 1: Protokol Uyumluluğu (AST ile)
+        ast_tree = self.validator.parse(raw_llm_output)
+        
+        # Politika Kontrolü: Hallüsinasyon Tespiti (P-CODE-01)
+        if ast_tree.has_field("import made_up_library_123"):
+            # Bu kısım ASLA LLM çağırmaz. Kara liste algoritmasıdır.
+            raise ComplianceViolation(
+                "POLICY_VIOLATION: P-CODE-01. Hayali kütüphane ithali tespit edildi.",
+                state="CONTESTED"
+            )
+            
+        # Adım 2: Deterministik Düzeltme (LLM'siz)
+        # Eğer fonksiyon imzası eksikse, otomatik tamamla.
+        if ast_tree.function_missing_return_type():
+            ast_tree.inject_default("-> None") # Varsayılanı bas.
+            
+        # Adım 3: WORM Log'a Yaz
+        AuditTrailWORM.append(
+            hash_prev=last_hash,
+            event="SCHEMA_VALIDATION_PASSED",
+            policy="P-CODE-01",
+            fingerprint=ast_tree.fingerprint
+        )
+        
+        return ValidatedCodeBlock(code=ast_tree.to_source())
+```
+
+BÖLÜM 6: İLERLEME TAKİBİ VE BİR SONRAKİ ADIM
+
+Şu anki Durum (Snapshot):
+
+· Formal State Machine (FSM) Mimarisi Kuruldu.
+· 60 Ajanın Görev Dağılımı Yapıldı.
+· Protokol Şema Kayıt Merkezi (Schema Registry) Tanımlandı.
+· FMEA ve Zero-Trust Politikaları İşlendi.
+
+Sıradaki Hedef (Belirttiğiniz Üzere): Security Scanner Agent Tam Teşekküllü İnşası
+
+Bu ajan için hazırlanacak paket şunları içerecektir:
+
+1. SAST Pipeline Protokolü: Semgrep ve CodeQL ile entegre, deterministik çalışan kural seti.
+2. CVE Korelasyon Motoru: DepsAuditor ile beslenen, sadece EPSS skoru 0.1'den yüksek olan zafiyetleri alarm olarak işaretleyen akıllı filtre.
+3. Çalışma Zamanı İzleme Kancası (Runtime Hook): eBPF benzeri bir yapı ile üretilen uygulamanın içine gömülerek log4shell benzeri anormallikleri anında yakalayan sensör.
+4. Uyumluluk Doğrulayıcı: PCI-DSS madde 6.5 (Güvenli Kodlama) ile otomatik eşleşen raporlayıcı.
+
+Devam edelim mi? (Evet derseniz, Security Scanner Agent'ın tüm protokollerini, durum makinesini ve diğer 59 ajanla nasıl A2A müzakere yapacağını detaylandıracağım).
+Planı sakla

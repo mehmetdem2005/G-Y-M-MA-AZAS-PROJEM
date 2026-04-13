@@ -1,0 +1,275 @@
+Tamamdır. Politikaların tamamını, en ince detayına kadar planlıyorum. Her bir politika; ID, başlık, kapsam, kural, ihlal durumu, muafiyet prosedürü, denetim gereksinimleri ve ilgili prosedür referansları ile birlikte tanımlanacak.
+
+---
+
+PDAAF POLİTİKA KÜTÜPHANESİ (TOPLAM 86 POLİTİKA)
+
+Politikalar 8 ana kategori altında toplanmıştır. Her politika, sistemin Anayasası niteliğindedir ve tüm ajanlar, hook'lar, skill'ler ve tool'lar bu politikalara uymak zorundadır.
+
+Kategori 1: Güvenlik Politikaları (P-SEC) – 22 Adet
+
+ID Başlık Özet Kural Şiddet
+P-SEC-01 SQL Enjeksiyonu Engelleme Kullanıcı girdisi doğrudan SQL sorgusuna eklenemez. KRİTİK
+P-SEC-02 XSS (Cross-Site Scripting) Engelleme Kullanıcı girdisi HTML çıktısında kaçış işlemi (escape) olmadan render edilemez. KRİTİK
+P-SEC-03 Hassas Veri Sızıntısı Engelleme Kod, log veya yanıt içinde PII (kredi kartı, TCKN, e-posta) bulunamaz. KRİTİK
+P-SEC-04 Güvensiz Serileştirme pickle, unserialize, eval gibi fonksiyonlar kullanılamaz. YÜKSEK
+P-SEC-05 Zayıf Kripto Algoritmaları MD5, SHA1, DES, RC4 kullanılamaz. YÜKSEK
+P-SEC-06 Sabit Kodlanmış Kimlik Bilgileri Kod içinde API anahtarı, şifre, token bulunamaz. KRİTİK
+P-SEC-07 Yetki Kontrolü Eksikliği Her endpoint, oturum ve rol kontrolü içermelidir. YÜKSEK
+P-SEC-08 CSRF Koruması State-changing isteklerde CSRF token zorunludur. ORTA
+P-SEC-09 Güvenli Oturum Yönetimi JWT'ler kısa ömürlü olmalı, refresh token rotasyonu uygulanmalıdır. YÜKSEK
+P-SEC-10 Dosya Yükleme Güvenliği Yüklenen dosyalar MIME tipi, boyut ve içerik taramasından geçmelidir. YÜKSEK
+P-SEC-11 Hata Mesajlarında Bilgi Sızdırma Hata yanıtları stack trace veya sistem bilgisi içermemelidir. ORTA
+P-SEC-12 Güvenlik Başlıkları HTTP yanıtlarında HSTS, CSP, X-Frame-Options başlıkları bulunmalıdır. ORTA
+P-SEC-13 Açık Yönlendirme (Open Redirect) redirect_url parametreleri beyaz liste ile doğrulanmalıdır. ORTA
+P-SEC-14 SSRF (Server-Side Request Forgery) Dış kaynaklara yapılan isteklerde hedef IP/domain beyaz liste kontrolü zorunludur. YÜKSEK
+P-SEC-15 XXE (XML External Entity) XML parser'larında harici entity çözümleme kapatılmalıdır. YÜKSEK
+P-SEC-16 IDOR (Insecure Direct Object Reference) Kaynak erişiminde sahiplik kontrolü yapılmalıdır. YÜKSEK
+P-SEC-17 Rate Limiting (Güvenlik Amaçlı) Oturum açma, şifre sıfırlama gibi endpoint'lerde brute-force koruması bulunmalıdır. ORTA
+P-SEC-18 Bağımlılık Zafiyetleri CVSS >= 7.0 ve EPSS >= 0.1 olan kütüphaneler kullanılamaz. KRİTİK
+P-SEC-19 Konteyner Güvenliği İmajlar root kullanıcı ile çalıştırılamaz, latest tag'i kullanılamaz. YÜKSEK
+P-SEC-20 Secret Yönetimi Hiçbir secret düz metin olarak depolanamaz; Vault veya KMS zorunludur. KRİTİK
+P-SEC-21 Denetim Logu Bütünlüğü Güvenlik olayları WORM log'a yazılmalı ve hash zinciri ile korunmalıdır. YÜKSEK
+P-SEC-22 Zero-Trust Ajan İletişimi Ajanlar arası tüm iletişim mTLS ve JWT doğrulaması gerektirir. KRİTİK
+
+---
+
+ÖRNEK DETAYLANDIRMA: P-SEC-01 (SQL Enjeksiyonu Engelleme)
+
+Alan Değer
+Politika ID P-SEC-01
+Başlık SQL Enjeksiyonuna Karşı Sıfır Tolerans
+Kategori Güvenlik
+Şiddet CRITICAL
+Sorumlu Ajanlar BackendCoder, DBAgent, CodeReviewer, SecurityScanner
+Uygulandığı Protokoller Code_Generation_v2, SAST_Scan_Request_v2
+Kural Tanımı LLM tarafından üretilen veya herhangi bir kaynaktan gelen kod içerisinde, kullanıcı girdisi (request parameter, form input, vb.) ile bir SQL sorgu metninin string birleştirme (+, concat, format) yoluyla oluşturulması yasaktır.
+Deterministik Doğrulama SecurityScanner AST analizi ile şu kalıpları arar:   - "SELECT..." + request.getParameter(...)   - f"SELECT * FROM users WHERE id = {user_input}"   - String.format("SELECT...", userInput)
+İhlal Durumu FSM State: CONTESTED
+Otomatik Düzeltme BackendCoder ajanına, ilgili kod bloğu için "Prepared Statement" (parametreli sorgu) kullanarak yeniden kod üretme talimatı gönderilir.
+İnsan Operatöre Mesaj "Üretilen kodda, {user_input_source} kaynaklı kullanıcı girdisi doğrudan SQL sorgusuna eklenmiş. Bu durum SQL Injection (CWE-89) zafiyetine yol açar. Kod otomatik olarak düzeltilmek üzere işaretlendi."
+Muafiyet (Waiver) Politikası İzin Verilmez. Bu politika için WAIVED durumu tanımlı değildir. Hiçbir koşulda SQL enjeksiyonuna izin verilemez.
+Denetim Kanıtı - code_snippet_hash: İhlale neden olan kodun SHA-256 değeri   - cwe_id: CWE-89   - source_location: Dosya ve satır numarası   - audit_trail_ref: WORM log kaydı referansı
+İlgili Prosedür SEC_INCIDENT_RESPONSE_V1 (Adım 2: Karantina, Adım 4: LLM Analizi)
+
+---
+
+ÖRNEK DETAYLANDIRMA: P-SEC-18 (Bağımlılık Zafiyetleri)
+
+Alan Değer
+Politika ID P-SEC-18
+Başlık Bilinen Kritik CVE'leri İçeren Kütüphanelerin Kullanım Yasağı
+Kategori Güvenlik
+Şiddet CRITICAL
+Sorumlu Ajanlar DepsAuditor, SecurityScanner, PipelineOrchestrator
+Uygulandığı Protokoller Dependency_Check_v1, CVE_Check_Request_v1
+Kural Tanımı Bir bağımlılık (npm, pip, maven, vb.) aşağıdaki koşulların her ikisini sağlıyorsa kullanılamaz:   1. CVSS v3.x skoru >= 7.0 (Yüksek veya Kritik)   2. EPSS (Exploit Prediction Scoring System) skoru >= 0.10 (Önümüzdeki 30 gün içinde istismar edilme olasılığı %10 veya daha fazla)
+Deterministik Doğrulama DepsAuditor şu araçları çalıştırır:   - npm audit --json / safety check --json   - Çıktıyı NVD (National Vulnerability Database) ve EPSS API ile korelasyon kurar.
+İstisna Kuralı Eğer CVSS >= 9.0 fakat EPSS < 0.01 ise, kullanıma WARN ile izin verilir ancak AuditTrailWORM'a yazılır.
+İhlal Durumu FSM State: CONTESTED (Build durdurulur)
+Otomatik Düzeltme DepsAuditor güvenli alternatif versiyon önerir. Architect onaylarsa package.json otomatik güncellenir.
+İnsan Operatöre Mesaj "Bağımlılık {package_name}@{version} kritik bir güvenlik açığı içeriyor (CVE-{id}, CVSS: {score}, EPSS: {epss}). Bu zafiyetin yakın zamanda istismar edilme olasılığı yüksektir. Build durduruldu. Lütfen paketi güncelleyin."
+Muafiyet (Waiver) Politikası Sadece SecurityScanner ve ComplianceAuditor ortak onayı ile, maksimum 24 saat süreyle muafiyet tanınabilir. Muafiyet gerekçesi WORM log'a yazılır.
+İlgili Prosedür VULN_MANAGEMENT_V1
+
+---
+
+Kategori 2: Kod Kalitesi Politikaları (P-CODE) – 15 Adet
+
+ID Başlık Özet Kural
+P-CODE-01 Hallüsinasyon Engelleme LLM tarafından üretilen kodda, var olmayan bir kütüphane veya fonksiyon çağrısı bulunamaz.
+P-CODE-02 Maksimum Fonksiyon Karmaşıklığı Siklomatik karmaşıklık (cyclomatic complexity) 10'u geçemez.
+P-CODE-03 Maksimum Fonksiyon Uzunluğu Bir fonksiyon 50 satırdan (boşluklar ve yorumlar hariç) uzun olamaz.
+P-CODE-04 Maksimum Dosya Uzunluğu Bir kaynak dosya 400 satırdan uzun olamaz.
+P-CODE-05 Kod Tekrarı (DRY) Aynı mantıksal blok 3'ten fazla yerde tekrar edemez.
+P-CODE-06 Anlamlı İsimlendirme Değişken/fonksiyon isimleri a, b, foo, temp gibi anlamsız olamaz.
+P-CODE-07 Yorum Satırı Zorunluluğu Her public fonksiyon için dokümantasyon yorumu zorunludur.
+P-CODE-08 Tip Güvenliği Dinamik tipli dillerde tip ipucu (type hint) zorunludur.
+P-CODE-09 Ölü Kod Tespiti Kullanılmayan değişken, import veya fonksiyon bulunamaz.
+P-CODE-10 Güvenli Varsayılanlar debug=True veya DEBUG=True production kodunda bulunamaz.
+P-CODE-11 Hata Yönetimi Tüm try-except blokları spesifik exception sınıflarını yakalamalıdır, bare except: kullanılamaz.
+P-CODE-12 Bağımlılık Enjeksiyonu Servis bağımlılıkları constructor üzerinden enjekte edilmelidir, new ile sabit bağlanamaz.
+P-CODE-13 Test Kapsamı Üretilen her yeni kod için en az %80 birim test kapsamı zorunludur.
+P-CODE-14 Linter Uyumluluğu Kod, proje yapılandırmasındaki linter kurallarına (ESLint, Pylint, vb.) uygun olmalıdır.
+P-CODE-15 Formatlama Uyumluluğu Kod, proje formatlayıcısı (Prettier, Black) ile formatlanmış olmalıdır.
+
+---
+
+ÖRNEK DETAYLANDIRMA: P-CODE-01 (Hallüsinasyon Engelleme)
+
+Alan Değer
+Politika ID P-CODE-01
+Başlık LLM Kaynaklı Hayali Kod Unsurlarının Engellenmesi
+Kategori Kod Kalitesi
+Şiddet HIGH
+Sorumlu Ajanlar SchemaRegistry, DepsAuditor, CodeReviewer
+Uygulandığı Protokoller Code_Generation_v2, SAST_Scan_Request_v2
+Kural Tanımı LLM tarafından üretilen kod içinde geçen her import / require ifadesi, projenin bağımlılık listesinde (package.json, requirements.txt, vb.) veya dilin standart kütüphanesinde mevcut olmak zorundadır. Mevcut olmayan bir kütüphane adı tespit edilirse politika ihlali oluşur.
+Deterministik Doğrulama SchemaRegistry AST üzerinde tüm ImportDeclaration düğümlerini çıkarır. Her birini şu kaynaklarla karşılaştırır:   - DepsAuditor'dan alınan güncel bağımlılık listesi   - Dilin standart kütüphane modül listesi (örn. Python sys.stdlib_module_names)
+İhlal Durumu FSM State: CONTESTED
+Otomatik Düzeltme BackendCoder veya ilgili ajan, hatayı içeren kod bloğunu yeniden üretmek üzere LLM'e gönderir. Prompt'a "Sadece mevcut bağımlılıkları kullan" talimatı eklenir.
+İnsan Operatöre Mesaj "Üretilen kodda {import_name} adlı bir kütüphane import edilmiş, ancak bu kütüphane proje bağımlılıkları arasında bulunmuyor. Bu bir LLM hallüsinasyonu olabilir. Kod otomatik olarak düzeltilmeye çalışılacak."
+Muafiyet Politikası İzin Verilmez. (Eğer kullanıcı gerçekten yeni bir kütüphane eklemek istiyorsa, bunu ayrı bir işlem olarak yapmalıdır; bu politika atlatılamaz.)
+İlgili Prosedür CODE_FIX_LOOP_V1 (Maksimum 3 deneme, sonra ESCALATED)
+
+---
+
+Kategori 3: LLM Kullanım Politikaları (P-LLM) – 8 Adet
+
+ID Başlık Özet Kural
+P-LLM-01 Token Bütçesi Her ajanın görev başına maksimum token kullanım sınırı vardır. Aşım durumunda CostOptimizer uyarır.
+P-LLM-02 JSON Schema Doğrulama Tüm LLM yanıtları, ilgili protokolün belirttiği JSON Schema'ya uygun olmalıdır. Uymayan yanıtlar reddedilir.
+P-LLM-03 Prompt Enjeksiyon Koruması Kullanıcı girdileri, LLM'e gönderilmeden önce PromptAnalyst tarafından tehlikeli komutlara karşı taranır.
+P-LLM-04 Bağlam Penceresi Optimizasyonu Uzun geçmiş, ProceduralMemoryKeeper tarafından özetlenerek token kullanımı azaltılır.
+P-LLM-05 Fallback ve Retry Stratejisi LLM servis hatasında önce yedek model, sonra önbellek, son olarak deterministik yedek kullanılır.
+P-LLM-06 Çıktı Önbellekleme Aynı prompt + bağlam hash'i için LLM yanıtı TTL süresince önbellekten sunulur.
+P-LLM-07 Model Seçimi Görevin kritikliğine ve bütçeye göre model seçimi CostOptimizer tarafından yapılır.
+P-LLM-08 Hallüsinasyon Skoru İzleme ModelEvaluator, LLM çıktılarını gerçeklik ve tutarlılık açısından puanlar. Eşik altı kalıcı ise model değiştirilir.
+
+---
+
+ÖRNEK DETAYLANDIRMA: P-LLM-02 (JSON Schema Doğrulama)
+
+Alan Değer
+Politika ID P-LLM-02
+Başlık LLM Çıktılarında Zorunlu Yapısal Doğrulama
+Kategori LLM Kullanımı
+Şiddet HIGH
+Sorumlu Ajanlar Tüm LLM kullanan ajanlar, SchemaRegistry
+Uygulandığı Hook after_llm_call
+Kural Tanımı Bir LLM çağrısından dönen her yanıt, çağrıyı yapan protokolün tanımladığı JSON Schema'ya tam uyumlu olmak zorundadır. Şema doğrulamasından geçemeyen yanıtlar sistem tarafından işlenmez.
+Deterministik Doğrulama SchemaRegistry ajanı, gelen yanıtı ilgili şema ile jsonschema kütüphanesi kullanarak doğrular.
+İhlal Durumu FSM State: CONTESTED
+Otomatik Düzeltme Yanıtı üreten ajan, aynı prompt ile bir kez daha LLM çağrısı yapar. İkinci denemede de başarısız olursa, ESCALATED durumuna geçer ve NotificationDispatcher ile insan operatöre bildirilir.
+İnsan Operatöre Mesaj "LLM yanıtı iki kez üst üste JSON Schema doğrulamasından geçemedi. Protokol: {protocol_id}, Beklenen Şema: {schema_id}. Manuel müdahale gerekiyor."
+Muafiyet Politikası İzin Verilmez. Yapısal olarak bozuk bir yanıt sistemin deterministik akışını bozacağından muafiyet tanımlı değildir.
+İlgili Prosedür LLM_RESPONSE_FAILURE_V1
+
+---
+
+Kategori 4: Veri Gizliliği Politikaları (P-PRIV) – 10 Adet
+
+ID Başlık Özet Kural
+P-PRIV-01 PII Tespiti ve Maskeleme Kullanıcı girdileri veya LLM yanıtları içinde geçen PII (TCKN, kredi kartı, e-posta, telefon) otomatik maskelenir.
+P-PRIV-02 Veri Minimizasyonu Bir görev için gerekenden fazla kullanıcı verisi toplanamaz veya LLM'e gönderilemez.
+P-PRIV-03 Unutulma Hakkı (GDPR Madde 17) Kullanıcı talebi üzerine, ilgili tüm veriler kriptografik olarak parçalanır (crypto-shredding).
+P-PRIV-04 Veri Yerleşimi (Data Residency) Kullanıcı verileri, kullanıcının bulunduğu coğrafi bölgenin dışına çıkarılamaz.
+P-PRIV-05 Şifreleme (At Rest) Tüm kalıcı depolama birimlerinde (veritabanı, dosya sistemi) kullanıcı verileri AES-256 ile şifrelenir.
+P-PRIV-06 Şifreleme (In Transit) Tüm ağ iletişimi TLS 1.3 ile şifrelenir.
+P-PRIV-07 Erişim Loglaması Hassas verilere her erişim (okuma/yazma) WORM log'a kaydedilir.
+P-PRIV-08 Anonimleştirme Test ve geliştirme ortamlarında gerçek kullanıcı verisi kullanılamaz; sentetik veri zorunludur.
+P-PRIV-09 Onay Yönetimi (Consent) Kullanıcıdan açık onay alınmadan hiçbir veri işlenemez. Onay kaydı WORM'da saklanır.
+P-PRIV-10 Veri Taşınabilirliği Kullanıcı talebi üzerine, tüm verileri yapılandırılmış formatta (JSON/CSV) dışa aktarılabilmelidir.
+
+---
+
+Kategori 5: Altyapı ve Güvenilirlik Politikaları (P-INFRA) – 12 Adet
+
+ID Başlık Özet Kural
+P-INFRA-01 Devre Kesici (Circuit Breaker) Bir servise yapılan çağrılarda 10 saniye içinde %50 hata oranı aşılırsa devre kesici açılır.
+P-INFRA-02 Otomatik Ölçeklendirme CPU > %70 veya RAM > %80 durumunda yeni pod oluşturulur.
+P-INFRA-03 Health Check Her servis /health ve /ready endpoint'lerini sağlamalıdır.
+P-INFRA-04 Yedekleme (Backup) Veritabanı yedekleri her 6 saatte bir alınır, 30 gün saklanır.
+P-INFRA-05 Felaket Kurtarma (DR) RPO: 1 saat, RTO: 4 saat. Yılda 2 kez tatbikat yapılır.
+P-INFRA-06 Değişmez Altyapı (Immutable Infra) Sunuculara elle müdahale yasaktır; tüm değişiklikler yeni imaj ve deployment ile yapılır.
+P-INFRA-07 Kaynak Limitleri Her konteyner için CPU ve RAM limiti tanımlanmış olmalıdır.
+P-INFRA-08 Ağ İzolasyonu Önizleme ortamları birbirinden ve production'dan ağ seviyesinde izole edilir.
+P-INFRA-09 Log Rotasyonu Loglar 7 gün sonra arşivlenir, 90 gün sonra silinir (WORM loglar hariç).
+P-INFRA-10 Metrik Toplama Tüm servisler Prometheus formatında metrik sunmalıdır.
+P-INFRA-11 Distributed Tracing Tüm istekler OpenTelemetry ile izlenmeli, trace ID'leri loglara eklenmelidir.
+P-INFRA-12 Kaos Mühendisliği Ayda bir kez üretim benzeri ortamda kontrollü kaos deneyleri yapılır.
+
+---
+
+Kategori 6: Uyumluluk Politikaları (P-COMP) – 6 Adet
+
+ID Başlık İlgili Standart
+P-COMP-01 SOC2 Tip II Uyumluluğu SOC2 CC1-CC9 kriterleri
+P-COMP-02 ISO 27001 Uyumluluğu ISO 27001:2022 Ek A kontrolleri
+P-COMP-03 GDPR Uyumluluğu GDPR Madde 5-49
+P-COMP-04 PCI-DSS Uyumluluğu PCI-DSS v4.0 Gereksinimleri
+P-COMP-05 HIPAA Uyumluluğu HIPAA Güvenlik Kuralı
+P-COMP-06 İç Denetim 3 ayda bir tüm politikaların etkinliği denetlenir.
+
+Her bir P-COMP politikası, ilgili standardın alt maddelerini karşılayan alt kurallar içerir. Örneğin:
+
+P-COMP-04 (PCI-DSS) Alt Kuralları:
+
+· P-COMP-04.1: Kart sahibi verisi ortamı (CDE) ağ seviyesinde segmentlere ayrılmalıdır.
+· P-COMP-04.2: Kart numaraları loglanamaz, maskelenmelidir.
+· P-COMP-04.3: Yılda en az bir kez penetrasyon testi yapılır.
+· P-COMP-04.4: Tüm sistem bileşenleri için güvenlik yamaları 30 gün içinde uygulanır.
+
+---
+
+Kategori 7: Kullanıcı Deneyimi Politikaları (P-UX) – 9 Adet
+
+ID Başlık Özet Kural
+P-UX-01 WCAG 2.1 AA Kontrast Oranı Metin kontrast oranı en az 4.5:1 olmalıdır.
+P-UX-02 Klavye Erişilebilirliği Tüm etkileşimli öğeler klavye ile erişilebilir olmalıdır.
+P-UX-03 Ekran Okuyucu Desteği Tüm resimler için alt metni, form elemanları için label zorunludur.
+P-UX-04 Responsive Tasarım Arayüz, 320px ile 3840px arasındaki tüm genişliklerde doğru görüntülenmelidir.
+P-UX-05 Dokunma Hedefi Boyutu Mobilde tıklanabilir öğeler en az 44x44 piksel olmalıdır.
+P-UX-06 Font Yükleme Performansı Web fontları font-display: swap ile yüklenmeli, FOIT (Flash of Invisible Text) engellenmelidir.
+P-UX-07 Animasyon Kısıtlamaları prefers-reduced-motion medya sorgusuna uyulmalıdır.
+P-UX-08 Tutarlı Tasarım Dili Tüm bileşenler, belirlenen tasarım sistemindeki token'ları (renk, boşluk, tipografi) kullanmalıdır.
+P-UX-09 Yükleme Durumu Göstergesi 300ms'den uzun süren işlemler için yükleme göstergesi gösterilmelidir.
+
+---
+
+Kategori 8: Maliyet Politikaları (P-COST) – 4 Adet
+
+ID Başlık Özet Kural
+P-COST-01 Günlük LLM Token Bütçesi Proje başına günlük toplam LLM token kullanımı $5 eşdeğerini geçemez.
+P-COST-02 Model Seçimi Optimizasyonu Basit görevlerde (sınıflandırma, özetleme) daha ucuz modeller (GPT-3.5, Claude Haiku) kullanılır.
+P-COST-03 Kaynak Kullanımı Optimizasyonu 1 saat boyunca trafik almayan önizleme ortamları otomatik uyku moduna alınır.
+P-COST-04 Maliyet Raporlaması Haftalık maliyet raporu NotificationDispatcher ile ilgili kişilere gönderilir.
+
+---
+
+POLİTİKA YÖNETİM VE İHLAL İŞ AKIŞI
+
+Politika Değerlendirme Sırası (Her Eylem İçin)
+
+```
+1. Ajan bir eylem başlatır (LLM çağrısı, kod üretimi, tool kullanımı).
+2. İlgili hook (`before_llm_call`, `on_tool_call`, vb.) tetiklenir.
+3. `PolicyEnforcer` ajanına `Policy_Evaluation_Request_v1` gönderilir.
+   - `subject`: Eylemi yapan ajan
+   - `action`: Yapılmak istenen işlem
+   - `resource`: İşlemin hedefi
+   - `context`: Ek bağlam
+4. `PolicyEnforcer`, ilgili tüm politikaları Rego motorunda değerlendirir.
+5. Sonuç:
+   - `PERMIT`: Eylem devam eder.
+   - `DENY`: Eylem engellenir, `FSM State: CONTESTED`.
+   - `DENY_WITH_WAIVER`: Muafiyet mekanizması devreye girer.
+6. İhlal durumunda `ProcedureEngine` ilgili prosedürü başlatır.
+7. Tüm süreç `AuditTrailWORM`'a kaydedilir.
+```
+
+Muafiyet (Waiver) Yönetim Prosedürü
+
+Bir politika ihlali için muafiyet talep edildiğinde:
+
+1. Talep, politikanın waiver_policy.allowed alanı kontrol edilir.
+2. allowed: false ise talep otomatik reddedilir.
+3. allowed: true ise:
+   · Talep, approver_agent olarak belirtilen ajana iletilir.
+   · Onaylayıcı ajan (veya insan operatör) gerekçeyi değerlendirir.
+   · Onaylanırsa, benzersiz bir waiver_id oluşturulur.
+   · Muafiyet, max_duration_hours süresince geçerlidir.
+   · Süre dolduğunda muafiyet otomatik kalkar, ihlal yeniden değerlendirilir.
+4. Tüm muafiyetler AuditTrailWORM'a özel bir WAIVER_GRANTED kaydı ile işlenir.
+
+---
+
+ÖZET
+
+· Toplam 86 politika 8 kategoride detaylandırılmıştır.
+· Her politika; kural, ihlal durumu, otomatik düzeltme, muafiyet prosedürü ve ilgili prosedür referansları ile eksiksiz tanımlanmıştır.
+· Politikalar, sistemin Protokol ve Prosedür katmanları ile sıkı sıkıya entegredir.
+· Hiçbir eylem, PolicyEnforcer değerlendirmesinden geçmeden gerçekleştirilemez.
+· Tüm politika ihlalleri ve muafiyetler, SHA-256 zincirleme ile WORM log'a yazılır.
+
+Bu doküman, PDAAF sisteminin Politika Omurgasını oluşturur. İstenirse, belirli bir politika kategorisinin tamamı veya tüm 86 politikanın eksiksiz detaylandırması sağlanabilir.
