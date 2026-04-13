@@ -1,0 +1,409 @@
+Anlaşıldı. Düzeltiyorum:
+
+Tüm ajanlar LLM'yi aktif ve birincil karar/bilişsel motor olarak kullanır. Ancak LLM tek başına yeterli değildir. Her ajan aynı zamanda:
+
+· Hook'lar (yaşam döngüsü olaylarına müdahale)
+· Skill'ler (ajanın uzmanlık alanına özel yetenek paketleri)
+· Tool'lar (dış sistemlere erişim, API çağrıları, dosya işlemleri)
+· API'ler (diğer ajanlarla ve dış dünyayla iletişim)
+
+...bileşenlerine sahiptir. Ve tüm bu eylemler, önceden tanımlanmış Protokol, Politika ve Prosedür çerçevesine %100 uyumlu olmak zorundadır.
+
+---
+
+NİHAİ SİSTEM MİMARİSİ: PDAAF (Protokol Güdümlü Otonom Ajan Fabrikası)
+
+BÖLÜM 1: 60 AJANIN TAM ENVANTERİ (Genişletilmiş)
+
+Her ajan aşağıdaki yapısal şablona sahiptir:
+
+Bileşen Açıklama
+LLM Motoru Ajanın bilişsel çekirdeği. Aktif olarak prompt alır, çıkarım yapar.
+Hook Kayıtları before_llm_call, after_llm_call, on_policy_violation, on_fsm_transition
+Skill Seti Ajanın uzmanlık alanına giren yetenekler (ör: CodeGenerationSkill, ThreatModelingSkill)
+Tool Seti Ajanın kullanabildiği araçlar (ör: FileSystemTool, WebSearchTool, KubernetesTool)
+API İstemcisi Diğer ajanlarla haberleşmek için protokol uyumlu istemci
+Politika Motoru Her eylem öncesi/sonrası politikaları değerlendirir
+FSM Motoru Ajanın kendi iç durum makinesi
+
+Ajan Listesi (Her biri için LLM Aktif)
+
+# Ajan Kategori Birincil LLM Kullanım Amacı Öne Çıkan Skill / Hook / Tool
+1 MasterPlanner Komuta Proje planı oluşturma, görev bağımlılıklarını analiz etme, yeniden planlama Skill: DAGOptimizationSkill Tool: TaskGraphTool Hook: on_plan_deviation
+2 ProtocolNegotiator Komuta Ajanlar arası anlaşmazlıklarda doğal dil uzlaşı metni üretme Skill: NegotiationSkill FSM: A2A_StateMachine
+3 StateSynchronizer Komuta Durum vektörlerindeki anlamsal çakışmaları çözme Tool: CRDTMergeTool
+4 PromptAnalyst Algı Kullanıcı girdisini yapılandırılmış niyete dönüştürme Skill: IntentExtractionSkill Hook: on_pii_detected
+5 RequirementElicitor Algı Eksik gereksinimleri belirleyip soru üretme Skill: QuestionGenerationSkill Tool: UserPromptTool
+6 IntentClassifier Algı Kullanıcı niyetini 147 sınıfa ayırma Skill: FewShotClassifierSkill
+7 UXConsistencyGuard Algı Erişilebilirlik ihlallerini doğal dille açıklama Tool: WCAGContrastChecker Hook: on_a11y_violation
+8 MultimodalAssetGen Algı Font, renk paleti, animasyon fikirleri üretme Skill: DesignSystemSkill Tool: GoogleFontsAPI, ColorPaletteGenerator
+9 Architect Mühendislik Mimari desen önerme, teknoloji seçimi gerekçelendirme Skill: ArchitectureReasoningSkill Tool: DiagramGeneratorTool
+10 BackendCoder Mühendislik API ve iş mantığı kodu üretme Skill: CodeGenSkill (Python/Go/Java) Tool: LSPTool, FormatterTool
+11 FrontendCoder Mühendislik Web arayüzü kodu üretme Skill: ReactGenSkill, CSSGenSkill Tool: TailwindConfigTool
+12 MobileCoder Mühendislik Mobil uygulama kodu üretme Skill: ReactNativeSkill, FlutterSkill
+13 TabletOptimizer Mühendislik Kırılma noktaları ve uyarlanabilir bileşenler önerme Tool: ViewportSimulator
+14 DBAgent Mühendislik Şema tasarımı, indeks önerisi, migration script'i üretme Skill: SQLGenSkill Tool: ERDTool
+15 APIDesigner Mühendislik OpenAPI/GraphQL şeması üretme Skill: RESTfulDesignSkill
+16 CodeReviewer Mühendislik Kod kalitesi, okunabilirlik, SOLID yorumları yapma Skill: CodeSmellDetectionSkill
+17 SecurityScanner Mühendislik Güvenlik açığı raporlarını yorumlama, yanlış pozitif filtreleme Tool: SASTEngineTool, CVEAPITool Hook: on_critical_vuln
+18 DepsAuditor Mühendislik Lisans uyumluluğu metinlerini analiz etme Tool: DependencyCheckTool
+19 TestGenerator Mühendislik Birim test senaryoları ve assertion'lar üretme Skill: UnitTestGenSkill
+20 FlakyDetector Mühendislik LLM bu ajanda istatistiksel karar için kullanılmaz. Sadece raporlama metni üretir. Tool: BernoulliStatsTool
+21 DocWriter Mühendislik API dokümantasyonu, README, yorum satırları üretme Skill: DocGenSkill
+22 PreviewRenderer Çalışma Zamanı LLM kullanmaz. Canlı önizleme sunar. Tool: WebSocketServerTool
+23 ConsoleHub Çalışma Zamanı Karmaşık log mesajlarını sadeleştirip kullanıcıya özetleme Skill: LogSummarizationSkill
+24 HotReloadManager Çalışma Zamanı LLM kullanmaz. Tool: FileWatcherTool
+25 FeatureFlagController Çalışma Zamanı Bayrak açıklamaları ve kullanım senaryoları üretme Tool: FlagEvalTool
+26 CanaryRolloutManager Çalışma Zamanı Risk değerlendirme raporu yazma Tool: TrafficSplitTool
+27 CircuitBreakerAgent Çalışma Zamanı LLM kullanmaz. Tool: HystrixLikeTool
+28 ErrorBudgetManager Çalışma Zamanı Hata bütçesi ihlali durumunda iyileştirme önerileri üretme Tool: SLOQueryTool
+29 PolicyEnforcer Politika & Uyum LLM kullanmaz. Kural motorudur. Tool: RegoEngineTool
+30 ComplianceAuditor Politika & Uyum Uyumluluk boşluklarını doğal dille raporlama Tool: EvidenceCollectorTool
+31 RateLimitGovernor Politika & Uyum Anomali tespitinde açıklama metni üretme Tool: TokenBucketTool
+32 ZeroTrustVerifier Politika & Uyum LLM kullanmaz. Tool: SPIFFETool
+33 PolicyManager Politika & Uyum Politika dilini doğal dile çevirme Skill: PolicyExplanationSkill
+34 ProcedureEngine Politika & Uyum LLM kullanmaz. İş akışı motorudur. Tool: WorkflowEngineTool
+35 VectorMemoryLibrarian Hafıza Sorgu embedding'i ve anlamsal arama Tool: VectorDBTool
+36 GraphKnowledgeBuilder Hafıza Kod varlıklarını çıkarma ve ilişkilendirme Skill: EntityExtractionSkill
+37 ProceduralMemoryKeeper Hafıza Oturum özeti çıkarma Skill: SummarizationSkill
+38 AuditTrailWORM Hafıza LLM kullanmaz. Tool: HashChainTool
+39 CacheManager Hafıza Önbellek anahtarı üretme Tool: RedisTool
+40 SLOAnalyser Kalite Trend analizi ve doğal dil raporlama Tool: PromQLTool
+41 FMEngineer Kalite Hata modu açıklamaları ve etki analizi üretme Skill: FMEAAnalysisSkill
+42 ChaosMonkey Kalite Kaos deneyi senaryoları çeşitlendirme Tool: ChaosToolkitTool
+43 DriftDetector Kalite Konfigürasyon sapma nedenlerini açıklama Tool: TerraformDiffTool
+44 PipelineOrchestrator CD Boru hattı hatası mesajlarını yorumlama Tool: JenkinsXTool, GitHubActionsTool
+45 EnvProvisioner CD Kaynak tahmini ve optimizasyon önerisi Tool: KubectlTool, TerraformTool
+46 ArtifactSigner CD LLM kullanmaz. Tool: CosignTool
+47 FeedbackClusterer Öğrenme Hata raporlarını kümeleme ve küme etiketleme Skill: ClusteringSkill
+48 ThresholdAutoTuner Öğrenme LLM kullanmaz. İstatistiksel modeldir. Tool: BayesianOptTool
+49 ModelEvaluator Öğrenme LLM çıktılarını değerlendirme rubriklerine göre puanlama Skill: LLMJudgeSkill
+50 MessageBus Altyapı LLM kullanmaz. Tool: NATSTool, KafkaTool
+51 SchemaRegistry Altyapı Şema evrimi için uyumluluk açıklaması üretme Tool: AvroSchemaTool
+52 CryptoService Altyapı LLM kullanmaz. Tool: VaultTool
+53 TelemetryCollector Altyapı LLM kullanmaz. Tool: OTelCollectorTool
+54 BackupOrchestrator Altyapı Yedekleme stratejisi dokümanı hazırlama Tool: ResticTool
+55 AuthGateway Güvenlik LLM kullanmaz. Tool: OAuth2ProxyTool
+56 SecretManager Güvenlik LLM kullanmaz. Tool: VaultTool
+57 FirewallRuleAgent Güvenlik Güvenlik duvarı kuralı açıklaması yazma Tool: IPTablesTool, SecurityGroupTool
+58 CostOptimizer Maliyet Maliyet optimizasyonu için doğal dil önerileri Tool: FinOpsAPITool
+59 NotificationDispatcher Bildirim Uyarı mesajlarını şablonla doldurma Tool: SlackTool, EmailTool
+60 HealthCheckAgent İzleme LLM kullanmaz. Tool: PrometheusTool
+
+---
+
+BÖLÜM 2: PROTOKOL, POLİTİKA VE PROSEDÜR ÜÇGENİNİN TAM TANIMI
+
+2.1. Protokol Katmanı (Zorunlu İletişim Şartnamesi)
+
+Her ajanın dış dünyaya açılan tek kapısı protokollerdir. Ajanlar birbirlerini sadece protokol tanımları üzerinden tanır.
+
+Genel Protokol Başlıkları (Her Mesajda Bulunur):
+
+```yaml
+protocol_id: string          # Örn: "Code_Generation_v2"
+message_id: UUIDv7
+correlation_id: UUIDv7
+sender:
+  agent_id: string
+  role: string               # "orchestrator", "coder", "guardian", "memory", "policy"
+  capability_version: string # Ajanın yetenek seti versiyonu
+recipient:
+  agent_id: string | "*"     # Hedef ajan veya broadcast
+  required_skill: string     # Alıcıda bulunması gereken skill (opsiyonel)
+timestamp: RFC3339
+ttl_seconds: int
+security:
+  jwt_token: string          # ZeroTrustVerifier tarafından imzalanmış
+  integrity_hash: string     # SHA256(payload + timestamp)
+policy_assertions:           # Göndericinin uyduğunu beyan ettiği politikalar
+  - policy_id: "P-CODE-01"
+    evidence_ref: string
+payload: object              # Protokole özgü veri
+```
+
+Önemli Protokol ID'leri ve Payload Şemaları (Örnek):
+
+Protokol ID Amaç Zorunlu Payload Alanları
+Code_Generation_v2 Kod üretimi talebi language, specification, context_files[], constraints[]
+SAST_Scan_Request_v2 Güvenlik taraması talebi code_blob, language, entrypoint, cwe_filter[]
+A2A_Negotiation_v2 Ajanlar arası müzakere proposal, fsm_state, contest_reason?, waiver_id?
+Preview_Update_v1 Canlı önizleme güncellemesi component_id, html, css, js
+Policy_Evaluation_Request_v1 Politika karar talebi subject, action, resource, context
+Memory_Store_v1 Belleğe yazma talebi memory_type (vector/graph/procedural), content, metadata
+Tool_Execution_v1 Ajanın bir tool çağırması tool_name, parameters, caller_agent
+Hook_Trigger_v1 Bir hook'un tetiklendiğini bildirme hook_name, event_data, source_agent
+
+2.2. Politika Katmanı (Detaylı Kural Seti)
+
+Her politika, OPA (Open Policy Agent) Rego dilinde yazılabilir formdadır ve doğal dil açıklaması içerir.
+
+Politika Şablonu:
+
+```yaml
+policy_id: "P-SEC-01"
+title: "SQL Enjeksiyonuna Karşı Sıfır Tolerans"
+severity: "CRITICAL"
+category: "security"
+applies_to:
+  agents: ["BackendCoder", "DBAgent", "CodeReviewer"]
+  protocols: ["Code_Generation_v2"]
+  skills: ["SQLGenSkill"]
+rule:
+  description: "Kullanıcı girdisi doğrudan SQL sorgu metnine eklenemez."
+  rego: |
+    package pdaf.policy.sec01
+    deny[msg] {
+        input.action == "generate_code"
+        some snippet in input.code_snippets
+        snippet.contains("+ request.")
+        msg := sprintf("SQL injection risk: %s", [snippet])
+    }
+violation_response:
+  fsm_state: "CONTESTED"
+  auto_remediation: "PreparedStatement kullanımı öner"
+  human_message_template: "Üretilen kodda kullanıcı girdisi ({input_source}) doğrudan SQL sorgusuna eklenmiş. Bu CRITICAL bir güvenlik açığıdır. Lütfen parametreli sorgu kullanın."
+waiver_policy:
+  allowed: true
+  max_duration_hours: 2
+  approver_agent: "Architect"
+  justification_required: true
+audit:
+  log_level: "ERROR"
+  worm_entry: true
+```
+
+Temel Politika Kategorileri ve Sayıları:
+
+Kategori Politika Sayısı Örnek ID'ler
+Güvenlik (SEC) 22 P-SEC-01 ... P-SEC-22
+Kod Kalitesi (CODE) 15 P-CODE-01 ... P-CODE-15
+LLM Kullanımı (LLM) 8 P-LLM-01 ... P-LLM-08
+Veri Gizliliği (PRIV) 10 P-PRIV-01 ... P-PRIV-10
+Altyapı & Güvenilirlik (INFRA) 12 P-INFRA-01 ... P-INFRA-12
+Uyumluluk (COMP) 6 P-COMP-01 ... P-COMP-06
+Kullanıcı Deneyimi (UX) 9 P-UX-01 ... P-UX-09
+Maliyet (COST) 4 P-COST-01 ... P-COST-04
+Toplam 86 
+
+2.3. Prosedür Katmanı (SOP - Standart Operasyon Prosedürleri)
+
+Prosedürler, belirli bir olay karşısında sistemin izleyeceği adım adım iş akışlarıdır. ProcedureEngine tarafından yürütülür.
+
+Örnek Prosedür: SEC_INCIDENT_RESPONSE_V1
+
+```yaml
+procedure_id: "SEC_INCIDENT_RESPONSE_V1"
+trigger:
+  event: "policy_violation"
+  condition: "policy.severity == 'CRITICAL' and policy.category == 'security'"
+steps:
+  - step_id: 1
+    action: "notify"
+    target: "SecurityScanner"
+    message: "Kritik güvenlik ihlali tespit edildi. İnceleme başlatılıyor."
+    timeout_seconds: 10
+
+  - step_id: 2
+    action: "quarantine"
+    target: "PipelineOrchestrator"
+    parameters:
+      scope: "affected_component"
+      duration_minutes: 30
+    on_failure: "ESCALATE"
+
+  - step_id: 3
+    action: "collect_evidence"
+    target: "AuditTrailWORM"
+    parameters:
+      include_memory_dump: true
+      include_code_snippet: true
+
+  - step_id: 4
+    action: "llm_analysis"
+    target: "SecurityScanner"
+    prompt_template: "Aşağıdaki kod parçası neden {policy_id} ihlaline neden oldu? Kısa bir özet geç: {code_snippet}"
+    output_var: "incident_summary"
+
+  - step_id: 5
+    action: "request_approval"
+    target: "human_operator"
+    message: "Kritik güvenlik ihlali: {{incident_summary}}. Devam etmek için onay bekleniyor."
+    options: ["Kodu Düzelt", "Muafiyet Tanı (Waive)", "Build'i İptal Et"]
+
+  - step_id: 6
+    action: "execute_decision"
+    switch: "{{approval_result}}"
+    cases:
+      "Kodu Düzelt": 
+        - action: "assign_task"
+          target: "BackendCoder"
+          task: "fix_security_issue"
+      "Muafiyet Tanı (Waive)":
+        - action: "create_waiver"
+          target: "PolicyEnforcer"
+      "Build'i İptal Et":
+        - action: "abort_pipeline"
+          target: "PipelineOrchestrator"
+```
+
+---
+
+BÖLÜM 3: HOOK, SKILL, TOOL VE API ENTEGRASYON MİMARİSİ
+
+Her ajanın iç yapısı şu bileşenlerden oluşur:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        AJAN KABUĞU                           │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  LLM MOTORU (Aktif)                                 │   │
+│  │  - Prompt şablonları                                 │   │
+│  │  - Bağlam penceresi yönetimi                         │   │
+│  │  - Yanıt işleme                                      │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                                                              │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │   HOOK'lar   │  │   SKILL'ler  │  │   TOOL'lar   │      │
+│  │              │  │              │  │              │      │
+│  │ before_llm   │  │ CodeGenSkill │  │ FileSystem   │      │
+│  │ after_llm    │  │ DesignSkill  │  │ WebSearch    │      │
+│  │ on_error     │  │ ReviewSkill  │  │ APIClient    │      │
+│  │ on_policy    │  │ ...          │  │ Database     │      │
+│  └──────────────┘  └──────────────┘  └──────────────┘      │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  PROTOKOL API İSTEMCİSİ                             │   │
+│  │  - MessageBus'a bağlantı                            │   │
+│  │  - Mesaj serileştirme/doğrulama                     │   │
+│  │  - FSM durum takibi                                 │   │
+│  └─────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+3.1. Hook Sistemi
+
+Hook'lar, ajanın yaşam döngüsünde belirli noktalara müdahale etmeyi sağlar. Her hook bir politika tetikleyicisi olabilir.
+
+Hook Adı Tetiklenme Anı Kullanım Amacı
+before_llm_call LLM çağrısından hemen önce Prompt'a ek bağlam ekleme, PII filtreleme (P-PRIV-01)
+after_llm_call LLM yanıtı alındıktan sonra Yanıtı JSON Schema ile doğrulama (P-LLM-02), hallüsinasyon kontrolü
+on_policy_violation Politika ihlali tespit edildiğinde Otomatik düzeltme girişimi, ProcedureEngine'i tetikleme
+on_fsm_transition Durum makinesi durum değiştirdiğinde WORM log kaydı, metrik güncelleme
+on_tool_call Bir tool çağrılmadan önce/sonra Yetki kontrolü (P-ZT-01), rate limiting (P-RATE-01)
+on_message_received Yeni bir protokol mesajı geldiğinde Mesaj bütünlüğü ve kimlik doğrulama
+
+3.2. Skill Yönetimi
+
+Skill'ler, ajanın LLM ile birlikte kullandığı uzmanlık modülleridir. Bir skill, özel prompt şablonları, few-shot örnekleri ve gerekiyorsa tool çağrıları içerir.
+
+Skill Tanım Şablonu:
+
+```yaml
+skill_id: "SQLGenSkill"
+version: "1.2.0"
+agent: "DBAgent"
+description: "Veritabanı şemasından SQL sorguları üretir."
+requires_tools: ["SchemaIntrospectionTool"]
+prompt_template: |
+  Sen bir veritabanı uzmanısın. Aşağıdaki şemaya uygun {query_type} sorgusu yaz.
+  Şema: {schema}
+  İstek: {request}
+  Kısıtlamalar: {constraints}
+output_schema: "SQLQueryOutput_v1.json"
+policy_checks: ["P-DB-01", "P-SEC-01"]
+```
+
+3.3. Tool Entegrasyonu
+
+Tool'lar, ajanın dış dünyayla etkileşimini sağlayan somut API istemcileri veya sistem çağrılarıdır. Her tool çağrısı Tool_Execution_v1 protokolü ile yapılır ve PolicyEnforcer tarafından denetlenir.
+
+Tool Kategorileri:
+
+Kategori Örnek Tool'lar Erişim Politikası
+Dosya Sistemi ReadFileTool, WriteFileTool, GlobTool Sadece proje diziniyle sınırlı (P-FS-01)
+Ağ HTTPClientTool, WebSocketTool Sadece izin verilen domain'ler (P-NET-01)
+Veritabanı SQLExecutorTool, SchemaMigrationTool Read-only veya migration onayı (P-DB-02)
+Konteyner KubectlTool, DockerTool Sadece önizleme namespace'i (P-ENV-01)
+Harici API GitHubTool, SlackTool, JiraTool OAuth kapsamı sınırlı (P-API-01)
+LLM OpenAITool, AnthropicTool, LocalLLMTool RateLimitGovernor'a tabi (P-RATE-01)
+
+---
+
+BÖLÜM 4: LLM KULLANIM POLİTİKALARI VE STRATEJİSİ
+
+LLM aktif olarak kullanılır, ancak kontrolsüz değildir. Aşağıdaki politikalar LLM kullanımını yönetir:
+
+Politika ID Açıklama
+P-LLM-01 Token Bütçesi: Her ajanın görev başına maksimum token limiti. CostOptimizer tarafından izlenir.
+P-LLM-02 JSON Schema Doğrulama: Tüm LLM çıktıları, beklenen şemaya uygun olmalıdır. Uymayanlar CONTESTED edilir.
+P-LLM-03 Hallüsinasyon Engelleme: LLM'in ürettiği kodda hayali kütüphane veya fonksiyon adları tespit edilirse, SchemaRegistry tarafından reddedilir.
+P-LLM-04 Bağlam Penceresi Optimizasyonu: İlgisiz geçmiş diyaloglar ProceduralMemoryKeeper tarafından özetlenerek token tasarrufu sağlanır.
+P-LLM-05 Fallback ve Retry: LLM servisi yanıt vermezse, önce yedek model, sonra önbellek, en son deterministik algoritma kullanılır.
+P-LLM-06 Prompt Enjeksiyon Koruması: Kullanıcı girdileri LLM'e gönderilmeden önce PromptAnalyst tarafından temizlenir.
+P-LLM-07 Model Seçimi: Görevin kritikliğine göre GPT-4, Claude-3 veya yerel Mistral seçilir. CostOptimizer karar verir.
+P-LLM-08 Çıktı Önbellekleme: Aynı prompt ve bağlam için LLM yanıtı CacheManager'da TTL ile saklanır.
+
+---
+
+BÖLÜM 5: TÜM SİSTEMİN ÇALIŞMA ÖRNEĞİ (KOMPLE BİR İŞ AKIŞI)
+
+Kullanıcı: "Bana bir blog sitesi yap. Admin paneli olsun, yazıları yönetebileyim. Tasarım modern ve responsive olsun."
+
+Tur 1: Gereksinim ve Planlama
+
+1. PromptAnalyst (LLM aktif) → Niyet: blog_site_with_admin
+2. RequirementElicitor (LLM aktif) → Soru: "Yorum sistemi istiyor musunuz? Hangi veritabanını tercih edersiniz?"
+3. Kullanıcı yanıtı → Bağlam güncellenir.
+4. MasterPlanner (LLM aktif) → DAG planı oluşturur:
+   · Architect → Mimari tasarım
+   · APIDesigner → OpenAPI şeması
+   · DBAgent → PostgreSQL şeması
+   · BackendCoder → Node.js/Express API
+   · FrontendCoder → React + Tailwind arayüz
+   · SecurityScanner → SAST taraması
+   · TestGenerator → Birim testler
+   · PreviewRenderer → Canlı önizleme
+
+Tur 2: Mimari ve Veritabanı
+
+1. Architect (LLM aktif) → "Monolitik ama modüler bir yapı öneriyorum. Admin paneli için ayrı bir route grubu oluşturalım."
+2. DBAgent (LLM aktif + SchemaIntrospectionTool) → posts, users, comments tablolarını oluşturur. P-DB-01 (indeks zorunluluğu) kontrol edilir.
+
+Tur 3: Kod Üretimi (Ön yüz ve Arka yüz Paralel)
+
+1. BackendCoder (LLM aktif + FileSystemTool) → POST /api/posts endpoint'ini yazar.
+2. FrontendCoder (LLM aktif + TailwindConfigTool) → BlogList bileşenini yazar.
+3. Her iki ajan da kod ürettikçe SecurityScanner (Tool: SASTEngineTool) devreye girer.
+   · BackendCoder kodunda const query = "SELECT * FROM posts WHERE title = '" + req.query.title + "'" tespit edilir.
+   · P-SEC-01 ihlali → FSM: CONTESTED.
+   · PolicyEnforcer → ProcedureEngine'i tetikler: SEC_INCIDENT_RESPONSE_V1.
+   · BackendCoder'a otomatik düzeltme görevi atanır. LLM'den parametreli sorgu kodu istenir.
+   · Kod düzeltilir, tekrar taranır → ACCEPTED.
+
+Tur 4: Canlı Önizleme ve Kullanıcı Onayı
+
+1. PreviewRenderer (WebSocket) → Üretilen bileşenleri tarayıcıya basar.
+2. ConsoleHub (LLM aktif - log özetleme) → "Blog ana sayfası hazır. Admin paneline giriş için bir kullanıcı oluşturmak ister misiniz?"
+3. Kullanıcı "Evet" der → DBAgent bir admin kullanıcısı oluşturur.
+4. Kullanıcı "Tasarımda yazı fontu çok küçük" der → MultimodalAssetGen (LLM aktif) alternatif font boyutları önerir. UXConsistencyGuard WCAG kontrastını kontrol eder.
+
+Tur 5: Sonsuz Ekleme Döngüsü
+1. Proje "tamamlandı" olarak işaretlenir, ancak sistem canlı kalır.
+2. 3 hafta sonra kullanıcı "Blog yazılarına etiket eklemek istiyorum" der.
+3. ProceduralMemoryKeeper (LLM ile özetleme) → Geçmiş bağlamı yükler: "Proje: Blog Sitesi, Veritabanı: PostgreSQL, Backend: Node.js"
+4. MasterPlanner yeni görev zinciri oluşturur: DBAgent → BackendCoder → FrontendCoder
+5. Sistem, mevcut kodu bozmadan yeni özelliği ekler. GraphKnowledgeBuilder etkilenen dosyaları belirler.
+
+---
+
+BÖLÜM 6: ÖZET VE SONRAKİ ADIM
+
+Bu dokümanda:
+
+1. 60 Ajanın tam listesi, her birinin LLM kullanım amacı, skill'leri, hook'ları ve tool'ları ile birlikte tanımlandı.
+2. Protokol, Politika ve Prosedür üçgeni detaylandırıldı. Toplam 86 politika ve çok sayıda prosedür şablonu oluşturuldu.
+3. LLM'in aktif ve birincil olduğu, ancak sıkı bir denetim altında çalıştığı bir mimari kuruldu.
+4. Hook, Skill ve Tool sistemleriyle ajanların yetenekleri genişletildi.
+5. Komple bir iş akışı örneğiyle sistemin nasıl çalışa
+cağı gösterildi.
